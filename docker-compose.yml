@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+  cms:
+    build: .
+    environment:
+      DB_HOST: "database"
+      DB_PORT: "3306"
+      DB_NAME: "cms"
+      DB_USER: "cms"
+      DB_PASS: "cms"
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    #restart: always
+    networks:
+      - app_network
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "rootPassword"
+      MYSQL_DATABASE: "cms"
+      MYSQL_USER: "cms"
+      MYSQL_PASSWORD: "cms"
+    networks:
+      app_network:
+        aliases:
+          - database
+    #restart: always
+volumes:
+  mysql_data:
+    driver: local
+networks:
+  app_network:
+    driver: bridge
